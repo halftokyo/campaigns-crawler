@@ -29,7 +29,7 @@ jobs:
           NOTION_DATABASE_URL: ${{ secrets.NOTION_DATABASE_URL }}
         run: |
           export PYTHONPATH=src
-          python -m campaigns.main --config configs/sources.json --out output/campaigns.json --weekly-new-and-archive --state-file output/state.json
+          python -m campaigns.main --config configs/sources.json --out output/campaigns.json --weekly-new-and-archive --state-file output/state.json --setup-notion-schema
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

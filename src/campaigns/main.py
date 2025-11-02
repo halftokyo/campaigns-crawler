@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 from . import pipeline
-from .notion_client import upsert_to_notion, archive_by_external_ids
+from .notion_client import upsert_to_notion, archive_by_external_ids, ensure_database_schema
 from .state import load_state, save_state, compute_weekly_changes
 
 
@@ -37,11 +37,18 @@ def parse_args() -> argparse.Namespace:
         default="output/state.json",
         help="Path to persistent state file for weekly/incremental operations",
     )
+    p.add_argument(
+        "--setup-notion-schema",
+        action="store_true",
+        help="Ensure Notion database has required properties (idempotent)",
+    )
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    if args.setup_notion_schema:
+        ensure_database_schema()
     if args.weekly_new_and_archive:
         # Weekly flow: get all active items (require deadline), then compute new/expired against state
         active = [

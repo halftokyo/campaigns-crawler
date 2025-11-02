@@ -152,6 +152,65 @@ def archive_by_external_ids(external_ids: Iterable[str], *, archive_page: bool =
 def _status_from_deadline(deadline: str | None) -> str:
     if not deadline:
         return "需人工确认"
+
+
+def ensure_database_schema() -> None:
+    cli = _client()
+    db_id = _database_id_from_env()
+    if not cli or not db_id:
+        print("[info] Notion not configured. Skip schema ensure.")
+        return
+
+    pm = _prop_map_from_env()
+    try:
+        db = cli.databases.retrieve(database_id=db_id)  # type: ignore
+    except Exception as e:  # pragma: no cover - network
+        print(f"[warn] retrieve database failed: {e}")
+        return
+
+    existing: Dict[str, dict] = db.get("properties", {})
+    to_update: Dict[str, dict] = {}
+
+    # ensure title name matches desired
+    desired_title = pm["name"]
+    existing_title_name = None
+    for name, spec in existing.items():
+        if spec.get("type") == "title" or ("title" in spec):
+            existing_title_name = name
+            break
+    if existing_title_name and existing_title_name != desired_title:
+        to_update[existing_title_name] = {"name": desired_title}
+
+    # helper to add property if missing
+    def add_missing(prop_name: str, spec: dict) -> None:
+        if prop_name not in existing and prop_name not in to_update:
+            to_update[prop_name] = spec
+
+    # desired properties
+    add_missing(pm["provider"], {"rich_text": {}})
+    add_missing(pm["category"], {"rich_text": {}})
+    add_missing(pm["reward_type"], {"select": {"options": [{"name": "积分"}, {"name": "现金"}]}})
+    add_missing(pm["reward_value"], {"rich_text": {}})
+    add_missing(pm["deadline"], {"date": {}})
+    add_missing(pm["source_url"], {"url": {}})
+    add_missing(pm["external_id"], {"rich_text": {}})
+    add_missing(pm["last_checked"], {"date": {}})
+    add_missing(pm["status"], {
+        "select": {
+            "options": [
+                {"name": "有效", "color": "green"},
+                {"name": "需人工确认", "color": "yellow"},
+                {"name": "失效", "color": "red"},
+            ]
+        }
+    })
+
+    if to_update:
+        try:
+            cli.databases.update(database_id=db_id, properties=to_update)  # type: ignore
+            print("[ok] ensured Notion database properties.")
+        except Exception as e:  # pragma: no cover - network
+            print(f"[warn] update database schema failed: {e}")
     try:
         d = datetime.fromisoformat(deadline).date()
         return "有效" if d >= datetime.utcnow().date() else "需人工确认"
