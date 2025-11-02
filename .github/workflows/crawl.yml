@@ -26,6 +26,7 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          NOTION_DATABASE_URL: ${{ secrets.NOTION_DATABASE_URL }}
         run: |
           export PYTHONPATH=src
           python -m campaigns.main --config configs/sources.json --out output/campaigns.json --weekly-new-and-archive --state-file output/state.json

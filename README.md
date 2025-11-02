@@ -2,6 +2,8 @@
 
 面向日本官方站点与可靠聚合源的活动抓取器：证券开户、信用卡入会、支付/钱包与地方官方活动等。抓取公开 HTML/RSS/JSON 内容，统一为结构化记录，并可选 Upsert 到 Notion。
 
+- 公开数据库（Notion）：https://belazy.notion.site/29fb57a2d45e802b91a7e337b6183efa?v=29fb57a2d45e80f39992000cdbd92476
+
 ## 功能概览
 - 配置化抓取：来源在 `configs/sources.json`，支持 html/rss/json、CSS 选择器、关键词过滤。
 - 合规与稳健：检查 robots.txt、温和频率、默认关键词过滤（新規/口座開設/ポイント…）。
@@ -73,6 +75,7 @@ PYTHONPATH=src python -m campaigns.main --config configs/sources.json --out outp
 - `NOTION_TOKEN`：Notion 集成密钥（Internal Integration Token）。将数据库“分享到”该集成。
 - `NOTION_DATABASE_ID`：数据库 ID（或使用 `NOTION_DATABASE_URL` 自动解析）。
 - 可选：`NOTION_DATABASE_URL`：数据库或公开页面 URL（例如你提供的公开链接），程序会自动提取 32 位 ID。
+  - 当前数据库链接：`https://belazy.notion.site/29fb57a2d45e802b91a7e337b6183efa?v=29fb57a2d45e80f39992000cdbd92476`
 - 可选：属性映射（如你的数据库字段名不同）：
   - `NOTION_PROP_MAP`：JSON 映射，如 `{"name":"标题","provider":"发起方"}`
   - 或分别设置：`NOTION_PROP_NAME`、`NOTION_PROP_PROVIDER`、`NOTION_PROP_CATEGORY`、`NOTION_PROP_REWARD_TYPE`、`NOTION_PROP_REWARD_VALUE`、`NOTION_PROP_DEADLINE`、`NOTION_PROP_SOURCE_URL`、`NOTION_PROP_EXTERNAL_ID`、`NOTION_PROP_LASTCHECKED`、`NOTION_PROP_STATUS`
