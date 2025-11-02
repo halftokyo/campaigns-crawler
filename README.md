@@ -87,6 +87,16 @@ PYTHONPATH=src python -m campaigns.main --config configs/sources.json --out outp
 - URL: `Source URL`
 - Date: `Deadline`, `LastChecked`
 
+### Notion 视图设置（日历）
+- 在数据库页面左上角 `⋯` → `Open as full page` 全页打开。
+- 新建视图：`New view` → `Calendar`，Calendar by 选择 `Deadline`。
+- 过滤（Filter）：
+  - `Status` is `有效` OR `需人工确认`（排除 `失效`）。
+  - 可选：`Deadline` is within next `7` days（每周视图）或 next `30` days（月视图）。
+- 排序（Sort）：按 `Deadline` 升序。
+- 卡片属性（Card properties）：勾选 `Provider`、`Reward Value`、`Category`、`Reward Type`、`Source URL`。
+- 若你的字段名与默认不同，可通过仓库 Secrets 设置 `NOTION_PROP_MAP` 对应后再按你的字段名配置视图。
+
 ## GitHub Actions
 工作流在每周日（UTC）运行，默认使用周度模式：只 upsert 最近一周新增、并归档已过期；同时产出 `campaigns.json`、`new_this_week.json` 与 `expired_to_archive.json`。
 
