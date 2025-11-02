@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+.venv/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+
+# Output
+output/
+!output/.gitkeep
+
+# VSCode
+.vscode/
+

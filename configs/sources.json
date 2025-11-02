@@ -1,0 +1,272 @@
+[
+  {
+    "id": "rakuten-sec",
+    "provider": "楽天証券",
+    "category": "证券开户",
+    "source_type": "html",
+    "url": "https://www.rakuten-sec.co.jp/web/campaign/",
+    "selectors": {
+      "list": "a, .card, .campaign-item",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .amount"
+    },
+    "include_keywords": ["新規", "口座開設", "キャンペーン", "ポイント", "キャッシュバック", "クーポン"],
+    "exclude_keywords": ["終了", "終了しました"],
+    "needs_verification": true
+  },
+  {
+    "id": "matsui-sec",
+    "provider": "松井証券",
+    "category": "证券开户",
+    "source_type": "html",
+    "url": "https://www.matsui.co.jp/campaign/",
+    "selectors": {
+      "list": "a, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .amount"
+    },
+    "include_keywords": ["新規", "口座開設", "キャンペーン", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "rakuten-card",
+    "provider": "楽天カード",
+    "category": "信用卡入会",
+    "source_type": "html",
+    "url": "https://www.rakuten-card.co.jp/campaign/",
+    "selectors": {
+      "list": "a, .campaignCard, .campaign-list li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .amount, .point"
+    },
+    "include_keywords": ["新規", "入会", "ポイント", "キャンペーン", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "jcb-card",
+    "provider": "JCB",
+    "category": "信用卡入会",
+    "source_type": "html",
+    "url": "https://www.jcb.co.jp/campaign/",
+    "selectors": {
+      "list": "a, .campaign-list li, .card",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point"
+    },
+    "include_keywords": ["新規", "入会", "ポイント", "キャッシュバック", "キャンペーン", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "paypay",
+    "provider": "PayPay",
+    "category": "支付/钱包",
+    "source_type": "html",
+    "url": "https://paypay.ne.jp/event/",
+    "selectors": {
+      "list": "a, .eventItem, .card",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .amount"
+    },
+    "include_keywords": ["キャンペーン", "ポイント", "還元", "キャッシュバック", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "rakuten-pay",
+    "provider": "楽天ペイ",
+    "category": "支付/钱包",
+    "source_type": "html",
+    "url": "https://pay.rakuten.co.jp/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["キャンペーン", "ポイント", "還元", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  }
+  ,
+  {
+    "id": "sbi-sec",
+    "provider": "SBI証券",
+    "category": "证券开户",
+    "source_type": "html",
+    "url": "https://www.sbisec.co.jp/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["新規", "口座開設", "キャンペーン", "ポイント", "キャッシュバック", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "d-barai",
+    "provider": "d払い",
+    "category": "支付/钱包",
+    "source_type": "html",
+    "url": "https://service.smt.docomo.ne.jp/keitai_payment/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["キャンペーン", "ポイント", "還元", "キャッシュバック", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "aupay",
+    "provider": "au PAY",
+    "category": "支付/钱包",
+    "source_type": "html",
+    "url": "https://www.au.com/pr/aupaysp/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["キャンペーン", "ポイント", "還元", "キャッシュバック", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "linepay",
+    "provider": "LINE Pay",
+    "category": "支付/钱包",
+    "source_type": "html",
+    "url": "https://linepay.line.me/ja/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["キャンペーン", "ポイント", "還元", "キャッシュバック", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "moppy",
+    "provider": "モッピー",
+    "category": "返利聚合平台",
+    "source_type": "html",
+    "url": "https://pc.moppy.jp/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["キャンペーン", "ポイント", "還元", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "point-income",
+    "provider": "ポイントインカム",
+    "category": "返利聚合平台",
+    "source_type": "html",
+    "url": "https://pointi.jp/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["キャンペーン", "ポイント", "還元", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "tokyo-digital",
+    "provider": "東京都デジタルサービス局",
+    "category": "官方地方活动",
+    "source_type": "json",
+    "url": "https://example.tokyo.lg.jp/api/campaigns.json",
+    "json_path": "items",
+    "json_title_key": "title",
+    "json_link_key": "url",
+    "json_deadline_key": "deadline",
+    "include_keywords": ["ポイント", "キャンペーン", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "smbc-card",
+    "provider": "三井住友カード",
+    "category": "信用卡入会",
+    "source_type": "html",
+    "url": "https://www.smbc-card.com/mem/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["新規", "入会", "ポイント", "キャッシュバック", "キャンペーン", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "epos-card",
+    "provider": "エポスカード",
+    "category": "信用卡入会",
+    "source_type": "html",
+    "url": "https://www.eposcard.co.jp/cpn/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["新規", "入会", "ポイント", "キャッシュバック", "キャンペーン", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  },
+  {
+    "id": "mufg-nicos",
+    "provider": "三菱UFJニコス",
+    "category": "信用卡入会",
+    "source_type": "html",
+    "url": "https://www.cr.mufg.jp/campaign/",
+    "selectors": {
+      "list": "a, .campaign, .card, li",
+      "title": "a",
+      "link": "a",
+      "date": ".date, time",
+      "reward": ".reward, .point, .amount"
+    },
+    "include_keywords": ["新規", "入会", "ポイント", "キャッシュバック", "キャンペーン", "クーポン"],
+    "exclude_keywords": ["終了"],
+    "needs_verification": true
+  }
+]
