@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import os
 from datetime import datetime
-from typing import Iterable, List
+from typing import Iterable, List, Dict
+import re
+import json
 
 try:
     from notion_client import Client
@@ -16,15 +18,68 @@ def _client() -> Client | None:  # type: ignore
         return None
     return Client(auth=token)
 
+_HEX32_RE = re.compile(r"([0-9a-f]{32})", re.I)
+
+
+def _hyphenate_notion_id(raw: str) -> str:
+    s = raw.replace("-", "").lower()
+    if len(s) != 32:
+        return raw
+    return f"{s[0:8]}-{s[8:12]}-{s[12:16]}-{s[16:20]}-{s[20:32]}"
+
+
+def _database_id_from_env() -> str | None:
+    db_id = os.getenv("NOTION_DATABASE_ID")
+    if db_id:
+        return _hyphenate_notion_id(db_id)
+    url = os.getenv("NOTION_DATABASE_URL")
+    if not url:
+        return None
+    m = _HEX32_RE.search(url)
+    if not m:
+        return None
+    return _hyphenate_notion_id(m.group(1))
+
+
+def _prop_map_from_env() -> Dict[str, str]:
+    # logical keys -> notion property names
+    defaults = {
+        "name": "Name",
+        "provider": "Provider",
+        "category": "Category",
+        "reward_type": "Reward Type",
+        "reward_value": "Reward Value",
+        "deadline": "Deadline",
+        "source_url": "Source URL",
+        "external_id": "External ID",
+        "last_checked": "LastChecked",
+        "status": "Status",
+    }
+    raw = os.getenv("NOTION_PROP_MAP")
+    if raw:
+        try:
+            overrides = json.loads(raw)
+            if isinstance(overrides, dict):
+                defaults.update({k: str(v) for k, v in overrides.items()})
+        except Exception:
+            pass
+    # individual overrides
+    for k in list(defaults.keys()):
+        env_key = f"NOTION_PROP_{k.upper()}"
+        if os.getenv(env_key):
+            defaults[k] = os.getenv(env_key) or defaults[k]
+    return defaults
+
 
 def upsert_to_notion(items: Iterable[dict]) -> None:
-    db_id = os.getenv("NOTION_DATABASE_ID")
+    db_id = _database_id_from_env()
     cli = _client()
     if not cli or not db_id:
         print("[info] Notion not configured. Skip upsert.")
         return
 
     now_iso = datetime.utcnow().isoformat()
+    pm = _prop_map_from_env()
 
     for it in items:
         eid = it.get("external_id")
@@ -42,16 +97,16 @@ def upsert_to_notion(items: Iterable[dict]) -> None:
             }
         )
         props = {
-            "Name": {"title": [{"text": {"content": it.get("name", "")}}]},
-            "Provider": {"rich_text": [{"text": {"content": it.get("provider", "")}}]},
-            "Category": {"rich_text": [{"text": {"content": it.get("category", "")}}]},
-            "Reward Type": {"select": {"name": it.get("reward_type") or ""}},
-            "Reward Value": {"rich_text": [{"text": {"content": it.get("reward_value") or ""}}]},
-            "Deadline": {"date": {"start": it.get("deadline")}} if it.get("deadline") else {"date": None},
-            "Source URL": {"url": it.get("source_url")},
-            "External ID": {"rich_text": [{"text": {"content": eid}}]},
-            "LastChecked": {"date": {"start": now_iso}},
-            "Status": {"select": {"name": _status_from_deadline(it.get("deadline"))}},
+            pm["name"]: {"title": [{"text": {"content": it.get("name", "")}}]},
+            pm["provider"]: {"rich_text": [{"text": {"content": it.get("provider", "")}}]},
+            pm["category"]: {"rich_text": [{"text": {"content": it.get("category", "")}}]},
+            pm["reward_type"]: {"select": {"name": it.get("reward_type") or ""}},
+            pm["reward_value"]: {"rich_text": [{"text": {"content": it.get("reward_value") or ""}}]},
+            pm["deadline"]: {"date": {"start": it.get("deadline")}} if it.get("deadline") else {"date": None},
+            pm["source_url"]: {"url": it.get("source_url")},
+            pm["external_id"]: {"rich_text": [{"text": {"content": eid}}]},
+            pm["last_checked"]: {"date": {"start": now_iso}},
+            pm["status"]: {"select": {"name": _status_from_deadline(it.get("deadline"))}},
         }
 
         if res.get("results"):
@@ -67,7 +122,7 @@ def upsert_to_notion(items: Iterable[dict]) -> None:
 
 
 def archive_by_external_ids(external_ids: Iterable[str], *, archive_page: bool = False, set_status: bool = True) -> None:
-    db_id = os.getenv("NOTION_DATABASE_ID")
+    db_id = _database_id_from_env()
     cli = _client()
     if not cli or not db_id:
         print("[info] Notion not configured. Skip archive.")
@@ -77,7 +132,7 @@ def archive_by_external_ids(external_ids: Iterable[str], *, archive_page: bool =
         res = cli.databases.query(  # type: ignore
             **{
                 "database_id": db_id,
-                "filter": {"property": "External ID", "rich_text": {"equals": eid}},
+                "filter": {"property": _prop_map_from_env()["external_id"], "rich_text": {"equals": eid}},
                 "page_size": 1,
             }
         )
@@ -87,7 +142,7 @@ def archive_by_external_ids(external_ids: Iterable[str], *, archive_page: bool =
         payload = {}
         if set_status:
             payload.setdefault("properties", {})
-            payload["properties"]["Status"] = {"select": {"name": "失效"}}
+            payload["properties"][ _prop_map_from_env()["status"] ] = {"select": {"name": "失效"}}
         if archive_page:
             payload["archived"] = True
         if payload:

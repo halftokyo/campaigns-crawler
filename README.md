@@ -70,13 +70,17 @@ PYTHONPATH=src python -m campaigns.main --config configs/sources.json --out outp
 
 ## Notion（可选）
 设置环境变量后，自动 upsert 到你的 Notion 数据库：
-- `NOTION_TOKEN`：Notion 集成密钥
-- `NOTION_DATABASE_ID`：数据库 ID
+- `NOTION_TOKEN`：Notion 集成密钥（Internal Integration Token）。将数据库“分享到”该集成。
+- `NOTION_DATABASE_ID`：数据库 ID（或使用 `NOTION_DATABASE_URL` 自动解析）。
+- 可选：`NOTION_DATABASE_URL`：数据库或公开页面 URL（例如你提供的公开链接），程序会自动提取 32 位 ID。
+- 可选：属性映射（如你的数据库字段名不同）：
+  - `NOTION_PROP_MAP`：JSON 映射，如 `{"name":"标题","provider":"发起方"}`
+  - 或分别设置：`NOTION_PROP_NAME`、`NOTION_PROP_PROVIDER`、`NOTION_PROP_CATEGORY`、`NOTION_PROP_REWARD_TYPE`、`NOTION_PROP_REWARD_VALUE`、`NOTION_PROP_DEADLINE`、`NOTION_PROP_SOURCE_URL`、`NOTION_PROP_EXTERNAL_ID`、`NOTION_PROP_LASTCHECKED`、`NOTION_PROP_STATUS`
 
-数据库字段建议：
+数据库字段建议（默认字段名如下，如不同请用属性映射覆盖）：
 - Title: `Name`
 - Rich text: `Provider`, `Category`, `Reward Value`, `External ID`
-- Select: `Reward Type`, `Status`
+- Select: `Reward Type`, `Status`（建议包含：有效/需人工确认/失效）
 - URL: `Source URL`
 - Date: `Deadline`, `LastChecked`
 
