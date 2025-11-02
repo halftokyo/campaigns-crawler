@@ -35,3 +35,17 @@ jobs:
         with:
           name: campaigns-json
           path: output/campaigns.json
+      - name: Upload new_this_week
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: new-this-week
+          path: output/new_this_week.json
+          if-no-files-found: ignore
+      - name: Upload expired_to_archive
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: expired-to-archive
+          path: output/expired_to_archive.json
+          if-no-files-found: ignore
